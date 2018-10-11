@@ -67,15 +67,23 @@ var StackOutputPlugin = /** @class */ (function () {
             return (Object.assign(obj, (_a = {}, _a[item.OutputKey] = item.OutputValue, _a)));
         }, {});
     };
-    StackOutputPlugin.prototype.handle = function (data) {
-        return Promise.all([
-            this.handleHandler(data),
-            this.handleFile(data)
-        ]);
-    };
+    // private handle (data: object) {
+    //   return Promise.all(
+    //     [
+    //       this.handleHandler(data),
+    //       this.handleFile(data)
+    //     ]
+    //   )
+    // }
     StackOutputPlugin.prototype.handleHandler = function (data) {
         var _this = this;
-        return this.hasHandler() ? (this.callHandler(data).then(function () { return _this.serverless.cli.log(util.format('Stack Output processed with handler: %s', _this.output.handler)); })) : Promise.resolve();
+        return this.hasHandler() ? (this.callHandler(data).then(function (res) {
+            _this.serverless.cli.log(util.format('Stack Output processed with handler: %s', _this.output.handler));
+            _this.serverless.cli.log(util.format('Got output: %s', res));
+            return res;
+        })
+        // ) : Promise.resolve(data)
+        ) : data;
     };
     StackOutputPlugin.prototype.handleFile = function (data) {
         var _this = this;
@@ -92,7 +100,7 @@ var StackOutputPlugin = /** @class */ (function () {
     StackOutputPlugin.prototype.process = function () {
         var _this = this;
         Promise.resolve()
-            .then(function () { return _this.validate(); }).then(function () { return _this.fetch(); }).then(function (res) { return _this.beautify(res); }).then(function (res) { return _this.handle(res); }).catch(function (err) { return _this.serverless.cli.log(util.format('Cannot process Stack Output: %s!', err.message)); });
+            .then(function () { return _this.validate(); }).then(function () { return _this.fetch(); }).then(function (res) { return _this.beautify(res); }).then(function (res) { return _this.handleHandler(res); }).then(function (res) { return _this.handleFile(res); }).catch(function (err) { return _this.serverless.cli.log(util.format('Cannot process Stack Output: %s!', err.message)); });
     };
     return StackOutputPlugin;
 }());

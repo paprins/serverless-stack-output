@@ -93,25 +93,32 @@ export default class StackOutputPlugin {
     )
   }
 
-  private handle (data: object) {
-    return Promise.all(
-      [
-        this.handleHandler(data),
-        this.handleFile(data)
-      ]
-    )
-  }
+  // private handle (data: object) {
+  //   return Promise.all(
+  //     [
+  //       this.handleHandler(data),
+  //       this.handleFile(data)
+  //     ]
+  //   )
+  // }
 
   private handleHandler(data: object) {
     return this.hasHandler() ? (
       this.callHandler(
         data
       ).then(
-        () => this.serverless.cli.log(
-          util.format('Stack Output processed with handler: %s', this.output.handler)
-        )
+        (res) => {
+          this.serverless.cli.log(
+            util.format('Stack Output processed with handler: %s', this.output.handler)
+          )
+          this.serverless.cli.log(
+            util.format('Got output: %s', res)
+          )
+          return res
+        }
       )
-    ) : Promise.resolve()
+    // ) : Promise.resolve(data)
+    ) : data
   }
 
   private handleFile(data: object) {
@@ -145,7 +152,9 @@ export default class StackOutputPlugin {
     ).then(
       (res) => this.beautify(res)
     ).then(
-      (res) => this.handle(res)
+      (res) => this.handleHandler(res)
+    ).then(
+      (res) => this.handleFile(res)
     ).catch(
       (err) => this.serverless.cli.log(
         util.format('Cannot process Stack Output: %s!', err.message)
