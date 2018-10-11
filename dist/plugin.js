@@ -67,23 +67,12 @@ var StackOutputPlugin = /** @class */ (function () {
             return (Object.assign(obj, (_a = {}, _a[item.OutputKey] = item.OutputValue, _a)));
         }, {});
     };
-    // private handle (data: object) {
-    //   return Promise.all(
-    //     [
-    //       this.handleHandler(data),
-    //       this.handleFile(data)
-    //     ]
-    //   )
-    // }
     StackOutputPlugin.prototype.handleHandler = function (data) {
         var _this = this;
         return this.hasHandler() ? (this.callHandler(data).then(function (res) {
             _this.serverless.cli.log(util.format('Stack Output processed with handler: %s', _this.output.handler));
-            _this.serverless.cli.log(util.format('Got output: %s', res));
             return res;
-        })
-        // ) : Promise.resolve(data)
-        ) : data;
+        })) : data;
     };
     StackOutputPlugin.prototype.handleFile = function (data) {
         var _this = this;

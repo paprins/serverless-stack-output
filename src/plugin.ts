@@ -93,15 +93,6 @@ export default class StackOutputPlugin {
     )
   }
 
-  // private handle (data: object) {
-  //   return Promise.all(
-  //     [
-  //       this.handleHandler(data),
-  //       this.handleFile(data)
-  //     ]
-  //   )
-  // }
-
   private handleHandler(data: object) {
     return this.hasHandler() ? (
       this.callHandler(
@@ -111,13 +102,9 @@ export default class StackOutputPlugin {
           this.serverless.cli.log(
             util.format('Stack Output processed with handler: %s', this.output.handler)
           )
-          this.serverless.cli.log(
-            util.format('Got output: %s', res)
-          )
           return res
         }
       )
-    // ) : Promise.resolve(data)
     ) : data
   }
 
