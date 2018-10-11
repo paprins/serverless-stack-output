@@ -63,7 +63,7 @@ export default class StackOutputPlugin {
       this.options
     )
 
-    return Promise.resolve()
+    return Promise.resolve(data)
   }
 
   private saveFile (data: object) {

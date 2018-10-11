@@ -50,7 +50,7 @@ var StackOutputPlugin = /** @class */ (function () {
         var func = splits.pop() || '';
         var file = splits.join('.');
         require(file)[func](data, this.serverless, this.options);
-        return Promise.resolve();
+        return Promise.resolve(data);
     };
     StackOutputPlugin.prototype.saveFile = function (data) {
         var f = new file_1.default(this.file);
