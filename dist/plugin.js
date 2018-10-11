@@ -53,7 +53,7 @@ var StackOutputPlugin = /** @class */ (function () {
         return Promise.resolve(result);
     };
     StackOutputPlugin.prototype.saveFile = function (data) {
-        var f = new file_1.default(this.file);
+        var f = new file_1.default(this.file, this.output.format);
         return f.save(data);
     };
     StackOutputPlugin.prototype.fetch = function () {

@@ -2,12 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
 var StackOutputFile = /** @class */ (function () {
-    function StackOutputFile(path) {
+    function StackOutputFile(path, format) {
         this.path = path;
+        this.format = format;
     }
-    StackOutputFile.prototype.format = function (data) {
+    StackOutputFile.prototype.formatData = function (data) {
         var ext = this.path.split('.').pop() || '';
-        switch (ext.toUpperCase()) {
+        var format = this.format || ext;
+        switch (format.toUpperCase()) {
             case 'JSON':
                 return JSON.stringify(data, null, 2);
             case 'TOML':
@@ -16,11 +18,11 @@ var StackOutputFile = /** @class */ (function () {
             case 'YML':
                 return require('yamljs').stringify(data);
             default:
-                throw new Error('No formatter found for `' + ext + '` extension');
+                throw new Error('No formatter found for `' + this.format + '` extension');
         }
     };
     StackOutputFile.prototype.save = function (data) {
-        var content = this.format(data);
+        var content = this.formatData(data);
         try {
             fs.writeFileSync(this.path, content);
         }
